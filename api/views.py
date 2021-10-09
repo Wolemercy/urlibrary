@@ -1,24 +1,17 @@
 from django.db.models import query
 from django.shortcuts import render
-from django.views.decorators.csrf import csrf_exempt
+from rest_framework.decorators import api_view
 from rest_framework import generics, permissions, serializers
 from rest_framework.exceptions import ValidationError
 from .models import Book
 from .serializers import BookSerializer
 
-@csrf_exempt
-def login(request):
-    pass
-
+# @api_view(['GET', ])
 class BookList(generics.ListCreateAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
     
     permission_classes = [permissions.IsAuthenticated]
-
-    # def get_queryset(self):
-    #     reader = self.request.reader
-    #     return Book.objects.filter(user=reader)
 
     def perform_create(self, serializer):
         serializer.save(reader=self.request.user)
