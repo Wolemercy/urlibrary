@@ -116,7 +116,7 @@ class CreateNewBookTest(APITestCase):
 
     def test_create_invalid_book(self):
         """
-        Ensure we cann't create an invalid book object
+        Ensure we can't create an invalid book object
         """
         response = self.client.post(reverse('book-list'), self.invalid_data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)

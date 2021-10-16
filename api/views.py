@@ -12,11 +12,13 @@ from .models import Book
 from .serializers import BookSerializer
 from django.http import Http404
 
+from rest_framework.parsers import MultiPartParser, FormParser
+
 class BookList(generics.ListCreateAPIView):
     
     serializer_class = BookSerializer
-    
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    parser_classes = [MultiPartParser, FormParser]
 
     def get_queryset(self):
         """
@@ -27,9 +29,10 @@ class BookList(generics.ListCreateAPIView):
 
     def perform_create(self, serializer):
         serializer.save(reader=self.request.user)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
     
     def get_paginated_response(self, data):
-       return Response(data)
+       return Response(data, status=status.HTTP_200_OK)
 
 
 class BookRetrieveDestroy(generics.RetrieveUpdateDestroyAPIView):
