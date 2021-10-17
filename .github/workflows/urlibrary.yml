@@ -1,0 +1,41 @@
+name: urlibrary-ci
+
+on: [push]
+
+jobs:
+  health-check-job:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: github-actions
+        ports:
+          - 5432:5432
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+    steps:
+      - name: Checkout code # checking our the code at current commit that triggers the workflow
+        uses: actions/checkout@v2
+      - name: Cache dependency # caching dependency will make our build faster.
+        uses: actions/cache@v2 # for more info checkout pip section documentation at https://github.com/actions/cache
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+      - name: Setup python environment # setting python environment to 3.x
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+      - name: Check Python version # checking the python version to see if 3.x is installed.
+        run: python --version
+      - name: Install requirements # install application requirements
+        run: pip install -r requirements.txt
+      - name: Check Syntax # check code formatting
+        run: pycodestyle --statistics .
+      - name: Run Migrations # run migrations to create table in side car db container
+        run: python manage.py migrate
+      - name: Run Test # running tests
+        run: python manage.py test
