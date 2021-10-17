@@ -1,11 +1,19 @@
 stages:
   - test
+  - staging
   - deploy
 
 Test:
-  image: python:3.8.8
+  image: postgres:alpine
   stage: test
+  variables:
+    POSTGRES_DB: custom_db
+    POSTGRES_USER: custom_user
+    POSTGRES_PASSWORD: custom_pass
   before_script:
+    - export DATABASE_URL=postgres://$POSTGRES_USER:$POSTGRES_PASSWORD@postgres:5432/$POSTGRES_DB
+    - apt-get update -qy
+    - apt-get install -y python-dev python-pip
     - pip install -r requirements.txt
     - python manage.py migrate
     - python manage.py collectstatic --no-input
