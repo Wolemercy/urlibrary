@@ -12,6 +12,7 @@ jobs:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
           POSTGRES_DB: github-actions
+          SECRET_KEY: django-insecure-26sb0kog)5*gvgb4w8q_70q6gg5-d9979g*23yv^17up@lrr@$
         ports:
           - 5432:5432
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
