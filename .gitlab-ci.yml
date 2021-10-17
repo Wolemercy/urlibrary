@@ -3,27 +3,61 @@ stages:
   - deploy
 
 Test:
-  image: postgres:alpine
+  # image: postgres:alpine
+  # stage: test
+  # variables:
+  #   POSTGRES_DB: custom_db
+  #   POSTGRES_USER: custom_user
+  #   POSTGRES_PASSWORD: custom_pass
+  # before_script:
+  #   - export DATABASE_URL=postgres://$POSTGRES_USER:$POSTGRES_PASSWORD@postgres:5432/$POSTGRES_DB
+  #   - apk update
+  #   - apk add python3 py3-pip
+  #   - pip install -r requirements.txt
+  #   - python manage.py migrate
+  #   - python manage.py collectstatic --no-input
+  # image: python:3.8.8
+  # stage: test
+  # variables:
+  #   POSTGRES_DB: custom_db
+  #   POSTGRES_USER: custom_user
+  #   POSTGRES_PASSWORD: custom_pass
+  # before_script:
+  #   - export DATABASE_URL=postgres://$POSTGRES_USER:$POSTGRES_PASSWORD@postgres:5432/$POSTGRES_DB
+  #   - pip install -r requirements.txt
+  #   - python manage.py migrate
+  #   - python manage.py collectstatic --no-input
+  # when: on_success
+  # script:
+  #   - coverage run --include="./*/*" --omit="./manage.py" manage.py test
+  #   - coverage report -m
+  #   - coverage xml -i
+  # artifacts:
+  #   paths:
+  #     - coverage.xml
+  # when: on_success
+  # script:
+  #   - coverage run --include="./*/*" --omit="./manage.py" manage.py test
+  #   - coverage report -m
+  #   - coverage xml -i
+  # artifacts:
+  #   paths:
+  #     - coverage.xml
+
+Test:
+  services:
+  - postgres:alpine
   stage: test
   variables:
     POSTGRES_DB: custom_db
     POSTGRES_USER: custom_user
     POSTGRES_PASSWORD: custom_pass
-  before_script:
-    - export DATABASE_URL=postgres://$POSTGRES_USER:$POSTGRES_PASSWORD@postgres:5432/$POSTGRES_DB
-    - apk update
-    - apk add python3 py3-pip
-    - pip install -r requirements.txt
-    - python manage.py migrate
-    - python manage.py collectstatic --no-input
-  when: on_success
   script:
-    - coverage run --include="./*/*" --omit="./manage.py" manage.py test
-    - coverage report -m
-    - coverage xml -i
-  artifacts:
-    paths:
-      - coverage.xml
+  - export DATABASE_URL=postgres://$POSTGRES_USER:$POSTGRES_PASSWORD@postgres:5432/$POSTGRES_DB
+  - apt-get update -qy
+  - apt-get install -y python-dev python-pip
+  - pip install -r requirements.txt
+  - python manage.py test
 
 Deployment:
   image: ruby:latest
