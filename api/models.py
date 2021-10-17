@@ -4,9 +4,6 @@ from django.utils.translation import gettext_lazy as _
 from .utils import upload_to
 
 
-
-# Create your models here.
-
 class Book(models.Model):
     title = models.CharField(max_length=100)
     author = models.CharField(max_length=100)
@@ -20,9 +17,6 @@ class Book(models.Model):
 
     def __str__(self) -> str:
         return self.title
-    
+
     class Meta:
         ordering = ['-created']
-
-
-
