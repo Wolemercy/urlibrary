@@ -20,7 +20,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 
 #Check if app is in production
-SYSTEM_ENV = config.get('SYSTEM_ENV', default=None)
+SYSTEM_ENV = config('SYSTEM_ENV', default=None)
 
 
 # Quick-start development settings - unsuitable for production
