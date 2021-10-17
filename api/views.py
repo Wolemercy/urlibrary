@@ -1,17 +1,17 @@
-from django.db.models import query
 
 from rest_framework import generics, permissions, status
 from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
 
+from django.shortcuts import redirect
 
 from .models import Book
 from .serializers import BookSerializer
-from django.http import Http404
+from django.http import Http404, request
 
 from rest_framework.parsers import MultiPartParser, FormParser
 
-import logging, traceback
+import logging
 logger_info = logging.getLogger('info')
 
 class BookList(generics.ListCreateAPIView):
@@ -25,8 +25,13 @@ class BookList(generics.ListCreateAPIView):
         This view should return a list of all the purchases
         for the currently authenticated user.
         """
-        logger_info.info('List of books returned')
-        return Book.objects.filter(reader=self.request.user)
+
+        if self.request.user.is_authenticated:
+            logger_info.info('List of books returned')
+            return Book.objects.filter(reader=self.request.user)
+
+        else:        
+            raise Http404
 
     def perform_create(self, serializer):
         serializer.save(reader=self.request.user)
