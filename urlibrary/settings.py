@@ -117,21 +117,7 @@ WSGI_APPLICATION = 'urlibrary.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-DATABASES = {
-'default': {
-    'ENGINE': 'django.db.backends.postgresql',
-    'NAME': 'urlibrary',
-    'USER': 'postgres',
-    'PASSWORD': config('DB_PASSWORD'),
-    'HOST': 'localhost',
-    'PORT': '',
-    }
-    }
-
-if SYSTEM_ENV == 'PRODUCTION':
-    DATABASES['default'] = dj_database_url.config()
-
-elif SYSTEM_ENV == 'GITHUB_WORKFLOW':
+if SYSTEM_ENV == 'GITHUB_WORKFLOW':
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
@@ -142,7 +128,23 @@ elif SYSTEM_ENV == 'GITHUB_WORKFLOW':
             'PORT': '5432',
         }
     }
-    
+
+elif SYSTEM_ENV == 'PRODUCTION':
+    DATABASES = {
+        'default': dj_database_url.config()
+    } 
+
+else:
+    DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'urlibrary',
+        'USER': 'postgres',
+        'PASSWORD': config('DB_PASSWORD'),
+        'HOST': 'localhost',
+        'PORT': '',
+        }
+        }
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
