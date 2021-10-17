@@ -20,7 +20,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 
 #Check if app is in production
-PRODUCTION = config('DATABASE_URL') != None
+SYSTEM_ENV = config.get('SYSTEM_ENV', default=None)
 
 
 # Quick-start development settings - unsuitable for production
@@ -118,18 +118,31 @@ WSGI_APPLICATION = 'urlibrary.wsgi.application'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
 DATABASES = {
-   'default': {
-       'ENGINE': 'django.db.backends.postgresql',
-       'NAME': 'urlibrary',
-       'USER': 'postgres',
-       'PASSWORD': config('DB_PASSWORD'),
-       'HOST': 'localhost',
-       'PORT': '',
-   }
-}
+'default': {
+    'ENGINE': 'django.db.backends.postgresql',
+    'NAME': 'urlibrary',
+    'USER': 'postgres',
+    'PASSWORD': config('DB_PASSWORD'),
+    'HOST': 'localhost',
+    'PORT': '',
+    }
+    }
 
-if PRODUCTION:
+if SYSTEM_ENV == 'PRODUCTION':
     DATABASES['default'] = dj_database_url.config()
+
+elif SYSTEM_ENV == 'GITHUB_WORKFLOW':
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': 'github_actions',
+            'USER': 'postgres',
+            'PASSWORD': 'postgres',
+            'HOST': '127.0.0.1',
+            'PORT': '5432',
+        }
+    }
+    
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
