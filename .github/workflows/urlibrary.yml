@@ -38,6 +38,7 @@ jobs:
       - name: Run Tests # run migrations to create table in side car db container
         env:
           SECRET_KEY: $$)nk^ch(^0!u&#vbmruh2c0r+_$+m$kes(tz)f&*rdtb7r0#@
+          SYSTEM_ENV: GITHUB_WORKFLOW
         run: python manage.py test
       - name: Run Test # running tests
         run: python manage.py test
