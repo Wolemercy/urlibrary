@@ -46,7 +46,7 @@ Test:
 
 Test:
   services:
-  - postgres:alpine
+  - postgres
   stage: test
   variables:
     POSTGRES_DB: custom_db
