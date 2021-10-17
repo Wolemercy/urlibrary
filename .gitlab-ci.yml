@@ -12,7 +12,7 @@ Test:
   before_script:
     - export DATABASE_URL=postgres://$POSTGRES_USER:$POSTGRES_PASSWORD@postgres:5432/$POSTGRES_DB
     - apk update
-    - apk add python-dev python-pip
+    - apk add python3 py3-pip
     - pip install -r requirements.txt
     - python manage.py migrate
     - python manage.py collectstatic --no-input
