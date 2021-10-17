@@ -216,6 +216,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 #Logging
 LOG_PATH = os.path.join(BASE_DIR, 'logs/')
+os.makedirs(LOG_PATH, exist_ok=True)
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
