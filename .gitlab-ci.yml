@@ -2,98 +2,43 @@ stages:
   - test
   - deploy
 
-Test:
-  # image: postgres:alpine
-  # stage: test
-  # variables:
-  #   POSTGRES_DB: custom_db
-  #   POSTGRES_USER: custom_user
-  #   POSTGRES_PASSWORD: custom_pass
-  # before_script:
-  #   - export DATABASE_URL=postgres://$POSTGRES_USER:$POSTGRES_PASSWORD@postgres:5432/$POSTGRES_DB
-  #   - apk update
-  #   - apk add python3 py3-pip
-  #   - pip install -r requirements.txt
-  #   - python manage.py migrate
-  #   - python manage.py collectstatic --no-input
-  # image: python:3.8.8
-  # stage: test
-  # variables:
-  #   POSTGRES_DB: custom_db
-  #   POSTGRES_USER: custom_user
-  #   POSTGRES_PASSWORD: custom_pass
-  # before_script:
-  #   - export DATABASE_URL=postgres://$POSTGRES_USER:$POSTGRES_PASSWORD@postgres:5432/$POSTGRES_DB
-  #   - pip install -r requirements.txt
-  #   - python manage.py migrate
-  #   - python manage.py collectstatic --no-input
-  # when: on_success
-  # script:
-  #   - coverage run --include="./*/*" --omit="./manage.py" manage.py test
-  #   - coverage report -m
-  #   - coverage xml -i
-  # artifacts:
-  #   paths:
-  #     - coverage.xml
-  # when: on_success
-  # script:
-  #   - coverage run --include="./*/*" --omit="./manage.py" manage.py test
-  #   - coverage report -m
-  #   - coverage xml -i
-  # artifacts:
-  #   paths:
-  #     - coverage.xml
+  Test:
+    stage: test
+    runs-on: ubuntu-latest
+    services:
+      db:
+        image: postgres:12.3-alpine
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: github_actions
+        ports:
+          - 5432:5432
+        options: --mount type=tmpfs,destination=/var/lib/postgresql/data --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+    steps:
+      - name: Set up Python 3.8.5
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8.5
 
-# Test:
-  services:
-#   - postgres
-#   stage: test
-#   variables:
-#     POSTGRES_DB: custom_db
-#     POSTGRES_USER: custom_user
-#     POSTGRES_PASSWORD: custom_pass
-#   script:
-#   - export DATABASE_URL=postgres://$POSTGRES_USER:$POSTGRES_PASSWORD@postgres:5432/$POSTGRES_DB
-#   - apt-get update -qy
-#   - apt-get install -y python3-dev python-pip
-#   - pip install -r requirements.txt
-#   - python manage.py test
+      - name: Install dependencies
+        run: pip install -r requirements.txt
 
-  runs-on: ubuntu-latest
-  services:
-    db:
-      image: postgres:12.3-alpine
-      env:
-        POSTGRES_USER: postgres
-        POSTGRES_PASSWORD: postgres
-        POSTGRES_DB: github_actions
-      ports:
-        - 5432:5432
-      options: --mount type=tmpfs,destination=/var/lib/postgresql/data --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
-  steps:
-    - name: Set up Python 3.8.5
-      uses: actions/setup-python@v2
-      with:
-        python-version: 3.8.5
+      - name: Make migrations
+        run: |
+          python manage.py makemigrations
+          python manage.py migrate
 
-    - name: Install dependencies
-      run: pip install -r app/requirements.txt
-
-    - name: Make migrations
-      run: |
-        python manage.py makemigrations
-        python manage.py migrate
-
-    - name: Run tests
-      run: |
-        coverage run --include="./*/*" --omit="./manage.py" manage.py test
-        coverage report -m
-        coverage xml -i
-      artifacts:
-        paths:
-          - coverage.xml
-      env:
-        SYSTEM_ENV: GITHUB_WORKFLOW
+      - name: Run tests
+        run: |
+          coverage run --include="./*/*" --omit="./manage.py" manage.py test
+          coverage report -m
+          coverage xml -i
+        artifacts:
+          paths:
+            - coverage.xml
+        env:
+          SYSTEM_ENV: GITHUB_WORKFLOW
 
 Deployment:
   image: ruby:latest
