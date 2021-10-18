@@ -37,8 +37,8 @@ class GetAllBooksTest(APITestCase):
         """
         response = self.client.get(reverse('book-list'))
         books = Book.objects.filter(reader=self.user)
-        # serializer = BookSerializer(books, many=True)
-        # self.assertEqual(response.data, serializer.data)
+        serializer = BookSerializer(books, many=True)
+        self.assertEqual(response.data, serializer.data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
 # GET SINGLE BOOK
