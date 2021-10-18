@@ -39,8 +39,9 @@ jobs:
         env:
           SECRET_KEY: $$)nk^ch(^0!u&#vbmruh2c0r+_$+m$kes(tz)f&*rdtb7r0#@
           SYSTEM_ENV: GITHUB_WORKFLOW
-          # AWS_ACCESS_KEY_ID: AKIAUIBGBJRMQPMTXZF2
-          # AWS_SECRET_ACCESS_KEY: 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
-          # AWS_STORAGE_BUCKET_NAME: django-urlibrary-404
-          # AWS_S3_REGION_NAME: us-east-2
+          USE_S3: True
+          AWS_ACCESS_KEY_ID: AKIAUIBGBJRMQPMTXZF2
+          AWS_SECRET_ACCESS_KEY: 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
+          AWS_STORAGE_BUCKET_NAME: django-urlibrary-404
+          AWS_S3_REGION_NAME: us-east-2
         run: python manage.py test

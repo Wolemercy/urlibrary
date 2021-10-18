@@ -191,7 +191,7 @@ STATIC_URL = '/staticfiles/'
 
 
 #Media Files
-USE_S3 = config('USE_S3', default=True, cast=bool)
+USE_S3 = config('USE_S3', default=False, cast=bool)
 
 if USE_S3:
     #aws settings
