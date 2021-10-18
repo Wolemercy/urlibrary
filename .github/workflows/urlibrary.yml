@@ -37,7 +37,7 @@ jobs:
       #   run: pycodestyle --statistics .
       - name: Run Tests # run migrations to create table in side car db container
         env:
-          SECRET_KEY: $$)nk^ch(^0!u&#vbmruh2c0r+_$+m$kes(tz)f&*rdtb7r0#@
+          SECRET_KEY: ${{ secrets.SECRET_KEY }}
           SYSTEM_ENV: GITHUB_WORKFLOW
           USE_S3: True
           AWS_ACCESS_KEY_ID: AKIAUIBGBJRMQPMTXZF2
