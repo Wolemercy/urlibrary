@@ -67,7 +67,7 @@ class GetSingleBookTest(APITestCase):
         """
         Ensure we can retrieve an existing book
         """
-        response = self.client.get(reverse('book-retrieve-destroy', args=[self.book1.id]))
+        response = self.client.get(reverse('book-retrieve-destroy', args=[22]))#self.book1.id]))
         book = Book.objects.get(pk=self.book1.id)
         serializer = BookSerializer(book)
         self.assertEqual(json.loads(response.content), serializer.data)
