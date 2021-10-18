@@ -7,7 +7,7 @@ from rest_framework.documentation import include_docs_urls
 
 urlpatterns = [
     path('books', (views.BookList.as_view()), name='book-list'),
-    re_path(r'books/(?P<pk>\d+)$', views.BookRetrieveDestroy.as_view(), name='book-retrieve-destroy'),
+    re_path(r'books/(?P<pk>\d+)', views.BookRetrieveDestroy.as_view(), name='book-retrieve-destroy'),
     #api documentation
     path('docs', include_docs_urls(title='URLibraryAPI')),
     path('schema', get_schema_view(

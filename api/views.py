@@ -5,6 +5,9 @@ from rest_framework.response import Response
 
 from django.shortcuts import redirect
 
+from django.conf import settings
+from decouple import config
+
 from .models import Book
 from .serializers import BookSerializer
 from django.http import Http404, request

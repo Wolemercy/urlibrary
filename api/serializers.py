@@ -11,7 +11,7 @@ class BookSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Book
-        fields = ['image', 'id', 'title', 'author', 'reader', 'reader_id',
+        fields = ['id', 'title', 'author', 'image', 'reader', 'reader_id',
                   'created', 'totalPages', 'currentPage', 'reading_progress']
 
     def get_reading_progress(self, book):

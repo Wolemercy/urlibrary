@@ -18,13 +18,6 @@ jobs:
     steps:
       - name: Checkout code # checking our the code at current commit that triggers the workflow
         uses: actions/checkout@v2
-      - name: Cache dependency # caching dependency will make our build faster.
-        uses: actions/cache@v2 # for more info checkout pip section documentation at https://github.com/actions/cache
-        with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-
       - name: Setup python environment # setting python environment to 3.x
         uses: actions/setup-python@v2
         with:
@@ -38,10 +31,25 @@ jobs:
       - name: Run Tests # run migrations to create table in side car db container
         env:
           SECRET_KEY: ${{ secrets.SECRET_KEY }}
-          SYSTEM_ENV: GITHUB_WORKFLOW
+          SYSTEM_ENV:  GITHUB_WORKFLOW
           USE_S3: True
-          AWS_ACCESS_KEY_ID: AKIAUIBGBJRMQPMTXZF2
-          AWS_SECRET_ACCESS_KEY: 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
-          AWS_STORAGE_BUCKET_NAME: django-urlibrary-404
-          AWS_S3_REGION_NAME: us-east-2
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_STORAGE_BUCKET_NAME: ${{ secrets.AWS_STORAGE_BUCKET_NAME }}
+          AWS_S3_REGION_NAME: ${{ secrets.AWS_S3_REGION_NAME }}
         run: python manage.py test
+  
+  heroku-deploy-job:
+    runs-on: ubuntu-latest
+    needs: [health-check-job]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Deploy django to heroku
+        uses: nyakaz73/heroku-django-deploy@v0.68
+        with: 
+          heroku_app_name : ${{ secrets.HEROKU_APP_NAME }}
+          heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
+          heroku_email_address: 'wolemercy@gmail.com'
+          use_git: true
+  
