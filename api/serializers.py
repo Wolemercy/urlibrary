@@ -2,6 +2,9 @@ from django.contrib.auth.models import User, Group
 from rest_framework import serializers
 from .models import Book
 import math
+from rest_framework.exceptions import ValidationError
+from django.utils.translation import gettext_lazy as _
+
 
 
 class BookSerializer(serializers.ModelSerializer):
@@ -17,6 +20,8 @@ class BookSerializer(serializers.ModelSerializer):
     def get_reading_progress(self, book):
         if not book.totalPages:
             return "N/A"
+        elif book.currentPage > book.totalPages:
+            raise ValidationError(_('CurrentPage cannot be greater than TotalPages'), code='invalid')
         else:
             progress = math.floor(100 * (book.currentPage / book.totalPages))
             return str(progress) + '%'

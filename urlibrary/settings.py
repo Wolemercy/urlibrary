@@ -14,6 +14,7 @@ from pathlib import Path
 from decouple import config
 import os
 import dj_database_url
+from django.urls import reverse
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -50,7 +51,8 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'allauth',
     'allauth.account',
-    'rest_auth.registration',
+    'dj_rest_auth',
+    'dj_rest_auth.registration',
     'rest_framework.authtoken',
 
     # local apps
@@ -91,8 +93,7 @@ TEMPLATES = [
 # Django Rest Framework
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.TokenAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.JWTCookieAuthentication',
         ],
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticatedOrReadOnly',
@@ -110,6 +111,11 @@ REST_FRAMEWORK = {
     'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema'
 
 }
+
+#JWT
+
+REST_USE_JWT = True
+JWT_AUTH_COOKIE = 'urlibrary-auth'
 
 WSGI_APPLICATION = 'urlibrary.wsgi.application'
 
@@ -144,7 +150,7 @@ else:
         'HOST': 'localhost',
         'PORT': '',
         }
-        }
+    }
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
@@ -164,10 +170,20 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# Authentication Backends
+AUTHENTICATION_BACKENDS = [
+    'allauth.account.auth_backends.AuthenticationBackend',
+    'django.contrib.auth.backends.ModelBackend',
+]
 
-#Email config
+# Email config
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 ACCOUNT_CONFIRM_EMAIL_ON_GET = True
-ACCOUNT_EMAIL_VERIFICATION = 'none'
+LOGIN_URL = reverse('urlibrary-login')
+
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/

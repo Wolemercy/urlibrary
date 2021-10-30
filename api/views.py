@@ -3,7 +3,7 @@ from rest_framework import generics, permissions, status
 from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
 
-from django.shortcuts import redirect
+from django.utils.translation import gettext_lazy as _
 
 from django.conf import settings
 from decouple import config
@@ -20,7 +20,7 @@ logger_info = logging.getLogger('info')
 class BookList(generics.ListCreateAPIView):
     
     serializer_class = BookSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [permissions.IsAuthenticated]
     parser_classes = [MultiPartParser, FormParser]
 
     def get_queryset(self):
@@ -60,7 +60,7 @@ class BookRetrieveDestroy(generics.RetrieveUpdateDestroyAPIView):
                 return Response(status=status.HTTP_204_NO_CONTENT)
             else:
                 logger_info.warning('Not your book to delete!')
-                raise ValidationError('This is not your book to delete!')
+                raise ValidationError(_('This is not your book to delete!'), code='invalid')
         else:
             logger_info.error('Not your book to delete!')
             raise Http404
@@ -73,6 +73,6 @@ class BookRetrieveDestroy(generics.RetrieveUpdateDestroyAPIView):
             return Response(status=status.HTTP_200_OK)
         else:
             logger_info.warning('Not your book to update!')
-            raise ValidationError('This is not your book to update!')
+            raise ValidationError(_('This is not your book to update!'), code='invalid')
 
     

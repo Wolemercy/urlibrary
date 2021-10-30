@@ -17,18 +17,11 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
-from rest_framework.authtoken.views import obtain_auth_token
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('api/', include('api.urls')),
-    path('rest-auth/', include('rest_auth.urls'),),
-    path('rest-auth/registration/', include('rest_auth.registration.urls')),
-
-    #request token
-    path('api-token-auth/', obtain_auth_token, name='api_token_auth'),
-
-    
+    path('admin', admin.site.urls),
+    path('api/v1/', include('api.urls')),
+        
 ]
 
 #serve media files
