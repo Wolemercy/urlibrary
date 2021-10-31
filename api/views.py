@@ -2,17 +2,14 @@
 from rest_framework import generics, permissions, status
 from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
+from rest_framework.parsers import MultiPartParser, FormParser
 
 from django.utils.translation import gettext_lazy as _
 
-from django.conf import settings
-from decouple import config
-
 from .models import Book
 from .serializers import BookSerializer
-from django.http import Http404, request
+from django.http import Http404
 
-from rest_framework.parsers import MultiPartParser, FormParser
 
 import logging
 logger_info = logging.getLogger('info')
@@ -74,5 +71,3 @@ class BookRetrieveDestroy(generics.RetrieveUpdateDestroyAPIView):
         else:
             logger_info.warning('Not your book to update!')
             raise ValidationError(_('This is not your book to update!'), code='invalid')
-
-    
