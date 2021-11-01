@@ -14,7 +14,8 @@ from pathlib import Path
 from decouple import config
 import os
 import dj_database_url
-from django.urls import reverse, reverse_lazy
+from django.urls import reverse_lazy
+from datetime import timedelta
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -116,6 +117,9 @@ REST_FRAMEWORK = {
 
 REST_USE_JWT = True
 JWT_AUTH_COOKIE = 'urlibrary-auth'
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
+}
 
 WSGI_APPLICATION = 'urlibrary.wsgi.application'
 

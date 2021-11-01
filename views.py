@@ -55,7 +55,7 @@ class BookRetrieveDestroy(generics.RetrieveUpdateDestroyAPIView):
                 return book
             else:
                 logger_info.error('This is not your book!')
-                raise ValidationError(_('This is not your book to view!'), code='invalid')
+            raise Http404
 
         else:
             logger_info.error('This book does not exist!')
