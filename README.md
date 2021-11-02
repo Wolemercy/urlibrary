@@ -144,7 +144,7 @@ Here is a sample response to a GET request for the list of a user's books:
 
 Here is a sample response to a GET request for a specific book:
 
-![Screenshot](images/urlibrary-bookretrieve.png)
+![Screenshot](images/urlibrary-bookretrieve-1.png)
 
 For more examples, please refer to the [API Documentation](https://urlibrary.herokuapp.com/api/v1/docs/)
 
