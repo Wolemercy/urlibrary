@@ -18,13 +18,17 @@ from django.urls import path, include, re_path
 from django.conf import settings
 from django.conf.urls.static import static
 
+from django.views.generic import RedirectView
 from allauth.account.views import ConfirmEmailView
 from dj_rest_auth.views import (LoginView, LogoutView, PasswordResetView,
      PasswordResetConfirmView, UserDetailsView)
 from dj_rest_auth.registration.views import RegisterView, VerifyEmailView
 
+from api.urls import path
+
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', RedirectView.as_view(pattern_name='register', permanent=True)),
     path('api/v1/', include('api.urls')),
 
     # auth
@@ -55,7 +59,6 @@ urlpatterns = [
 # token verification
 # if getattr(settings, 'REST_USE_JWT', False):
 from rest_framework_simplejwt.views import TokenVerifyView
-
 from dj_rest_auth.jwt_auth import get_refresh_view
 
 urlpatterns += [

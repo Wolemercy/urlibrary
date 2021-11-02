@@ -10,16 +10,8 @@ urlpatterns = [
     path('books/', (views.BookList.as_view()), name='book-list'),
     re_path(r'books/(?P<pk>\d+)/', views.BookRetrieveDestroy.as_view(), name='book-retrieve-destroy'),
 
-    #auth
-    # path('dj-rest-auth/', include('dj_rest_auth.urls')),
-    # path('dj-rest-auth/registration/', include('dj_rest_auth.registration.urls')),
-
-
-
-    #auth
-
     #api documentation
-    path('docs/', include_docs_urls(title='URLibraryAPI')),
+    path('docs/', include_docs_urls(title='URLibraryAPI'), name='docs'),
     path('schema/', get_schema_view(
         title="Urlibrary",
         description="A Library API",

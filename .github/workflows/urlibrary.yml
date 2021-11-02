@@ -1,10 +1,11 @@
 name: urlibrary-ci
 
-on: [push]
+on: [pull_request]
 
 jobs:
   health-check-job:
     runs-on: ubuntu-latest
+    environment: Test
     services:
       postgres:
         image: postgres
@@ -16,7 +17,7 @@ jobs:
           - 5432:5432
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
     steps:
-      - name: Checkout code # checking our the code at current commit that triggers the workflow
+      - name: Checkout code # checking out the code at current commit that triggers the workflow
         uses: actions/checkout@v2
       - name: Setup python environment # setting python environment to 3.x
         uses: actions/setup-python@v2
@@ -31,7 +32,7 @@ jobs:
       - name: Run Tests # run migrations to create table in side car db container
         env:
           SECRET_KEY: ${{ secrets.SECRET_KEY }}
-          SYSTEM_ENV:  GITHUB_WORKFLOW
+          SYSTEM_ENV:  ${{ secrets.SYSTEM_ENV }}
           USE_S3: True
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -41,6 +42,9 @@ jobs:
   
   heroku-deploy-job:
     runs-on: ubuntu-latest
+    environment: 
+      name: Production
+      url: 
     needs: [health-check-job]
     steps:
       - name: Checkout code
@@ -50,6 +54,6 @@ jobs:
         with: 
           heroku_app_name : ${{ secrets.HEROKU_APP_NAME }}
           heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
-          heroku_email_address: 'wolemercy@gmail.com'
+          heroku_email_address: ${{ secrets.HEROKU_EMAIL_ADDRESS }}
           use_git: true
   
