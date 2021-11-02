@@ -46,7 +46,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: 
       name: Production
-      url: 
+      url: https://urlibrary.herokuapp.com/
     needs: [health-check-job]
     steps:
       - name: Checkout code
