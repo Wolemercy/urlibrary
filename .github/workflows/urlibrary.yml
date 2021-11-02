@@ -1,6 +1,6 @@
 name: urlibrary-ci
 
-on: [pull_request]
+on: [push]
 
 jobs:
   health-check-job:
